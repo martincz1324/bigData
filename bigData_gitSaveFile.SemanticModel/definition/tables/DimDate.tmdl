@@ -1,0 +1,60 @@
+table DimDate
+	lineageTag: b6332269-75c1-4353-8de6-e4da97e82ccd
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: b8797c73-af0d-482e-9d0a-125a5b0f07eb
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = YEAR(DimDate[Date])
+		formatString: 0
+		lineageTag: d9784f5c-feb9-403e-9619-3eb168842308
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month = MONTH(DimDate[Date])
+		formatString: 0
+		lineageTag: 525e6502-3c81-47b2-bfe9-9e215de3654c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter = QUARTER(DimDate[Date])
+		formatString: 0
+		lineageTag: 354f1614-b20b-4865-9fec-e26920f7121d
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day = DAY(DimDate[Date])
+		formatString: 0
+		lineageTag: 7895d06e-a663-4d71-999f-749a0ea8ed37
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName = FORMAT(DimDate[Month], "MMMM")
+		lineageTag: d3f570ff-33a3-4b99-a391-f32056409db6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayName = FORMAT(DimDate[Date], "DDDD")
+		lineageTag: 14f3a98f-b122-46a0-bbcf-e0247b627b54
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimDate = calculated
+		mode: import
+		source = CALENDAR(DATE(2017, 1, 1), DATE(2023, 12, 31))
+
+	annotation PBI_Id = 16d4103f769241dba1780b48a4baee5a
+

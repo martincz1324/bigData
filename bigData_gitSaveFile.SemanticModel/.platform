@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "bigData_gitSaveFile"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "b0d8a411-6ec5-45c8-9e92-8db5f4cc1471"
+  }
+}

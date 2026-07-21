@@ -1,0 +1,24 @@
+relationship AutoDetected_4a9a11ef-305a-42b0-811f-473bcec4d399
+	fromColumn: FactComplaintCount.answerID
+	toColumn: DimAnswer.answerID
+
+relationship AutoDetected_916e7262-5019-4262-8743-eabe8367295f
+	fromColumn: FactComplaintCount.issueID
+	toColumn: DimIssueDetail.issueID
+
+relationship AutoDetected_fc5e8202-d417-435c-97ce-7f47f8c33378
+	fromColumn: FactComplaintCount.productID
+	toColumn: DimProductDetail.productID
+
+relationship AutoDetected_6871e1c2-cfea-47ad-86e6-ac9ccbfbe19a
+	fromColumn: FactComplaintCount.stateID
+	toColumn: DimState.stateID
+
+relationship AutoDetected_f19a31de-be1d-4625-8712-6ea145592091
+	fromColumn: FactComplaintCount.submitID
+	toColumn: DimSubmit.submitID
+
+relationship 5015ab9e-ca78-9880-e766-c5f7294ced76
+	fromColumn: FactComplaintCount.Date
+	toColumn: DimDate.Date
+

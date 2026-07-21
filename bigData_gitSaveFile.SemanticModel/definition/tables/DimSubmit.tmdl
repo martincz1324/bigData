@@ -1,0 +1,37 @@
+table DimSubmit
+	lineageTag: 4e1e2b51-7321-4eae-9773-5896a64b9808
+
+	column 'Submitted via'
+		dataType: string
+		lineageTag: 8bab34af-1a84-4178-b83e-500f74f41035
+		summarizeBy: none
+		sourceColumn: Submitted via
+
+		annotation SummarizationSetBy = Automatic
+
+	column submitID
+		dataType: int64
+		formatString: 0
+		lineageTag: 10bb54f6-b4ee-4e6d-8ec4-206222a45c88
+		summarizeBy: none
+		sourceColumn: submitID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimSubmit = m
+		mode: import
+		source =
+				let
+				    Source = Data,
+				    #"Removed Columns" = Table.RemoveColumns(Source,{"Complaint ID"}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Removed Columns",{"Submitted via"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 1, 1, Int64.Type),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Index",{{"Index", "submitID"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

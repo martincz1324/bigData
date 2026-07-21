@@ -1,0 +1,263 @@
+table FactComplaintCount
+	lineageTag: bce65682-6cea-4000-a32c-f509344432fb
+
+	measure TotalComplaints = ```
+			
+			
+			    COUNTROWS(FactComplaintCount)
+			```
+		formatString: 0
+		lineageTag: 2bfd4afe-e0fc-403d-a550-2bf5dc20a035
+
+	measure TimelyResponseRate% =
+			
+			
+			VAR TruthCount =
+			    CALCULATE(
+			        COUNT(FactComplaintCount[answerID]),
+			        DimAnswer[Timely response?] = "Yes"
+			    )
+			VAR TotalCount =
+			    COUNT(FactComplaintCount[issueID])
+			RETURN
+			
+			    DIVIDE(TruthCount, TotalCount, 0)
+		lineageTag: 73426f71-65fa-40ea-8ca4-c543d508531a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ComplaintsMTD =
+			
+			TOTALMTD(
+			    COUNTROWS(FactComplaintCount),
+			    DimDate[Date]
+			)
+		formatString: 0
+		lineageTag: 51db605e-5616-430c-9fdd-b55a4767d6c8
+
+	measure ComplaintsYTD =
+			
+			TOTALYTD(
+			    COUNTROWS(FactComplaintCount),
+			    DimDate[Date]
+			)
+		formatString: 0
+		lineageTag: a6bf2c7f-98e0-4703-867a-686160ab518b
+
+	measure ComplaintsPrevMonth =
+			
+			Calculate
+			(
+			    COUNTROWS(FactComplaintCount),
+			    DATEADD(
+			        DimDate[Date],
+			        -1,
+			        MONTH
+			    )
+			)
+		formatString: 0
+		lineageTag: 7956d809-db7a-4513-9978-97bff4166edf
+
+	measure ComplaintsMoM% =
+			
+			
+			
+			VAR ActualMonth = COUNTROWS(FactComplaintCount)
+			
+			VAR PrevMonth =
+			    Calculate
+			    (
+			        COUNTROWS(FactComplaintCount),
+			        DATEADD(
+			            DimDate[Date],
+			            -1,
+			            MONTH
+			        )
+			    )
+			
+			RETURN
+			
+			    DIVIDE(ActualMonth - PrevMonth, PrevMonth, 0)
+		lineageTag: 105e01ca-5589-4256-a2f8-927857f73c8a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ComplaintsMonetaryRelief =
+			
+			
+			CALCULATE(
+			    COUNTROWS(FactComplaintCount),
+			    DimAnswer[Company response to consumer] = "Closed with monetary relief"
+			)
+		formatString: 0
+		lineageTag: 708b5adf-9ce9-4df3-96b5-16fa30b74251
+
+	measure MonetaryReliefRate% =
+			
+			
+			VAR MonetaryReliefCount =
+			    CALCULATE(
+			        COUNTROWS(FactComplaintCount),
+			        DimAnswer[Company response to consumer] = "Closed with monetary relief"
+			    )
+			VAR TotalReliefCount =
+			    COUNTROWS(FactComplaintCount)
+			
+			    Return
+			
+			    DIVIDE (MonetaryReliefCount, TotalReliefCount, 0)
+		lineageTag: 37122f92-7c39-47f3-9e06-7cff663dc809
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ComplaintsInProgress =
+			
+			
+			CALCULATE(
+			    COUNTROWS(FactComplaintCount),
+			    DimAnswer[Company response to consumer] = "In progress"
+			)
+		formatString: 0
+		lineageTag: 614438cb-47be-4870-a6bc-80a13a572744
+
+	measure StateRankByComplaints =
+			
+			
+			VAR CurrentValue =
+			    COUNTROWS(FactComplaintCount)
+			RETURN
+			    RANKX(
+			        ALL(DimState[State]),
+			        CALCULATE(COUNTROWS(FactComplaintCount)),
+			        CurrentValue,
+			        DESC,
+			        Dense
+			    )
+		formatString: 0
+		lineageTag: c2ab9569-8fea-4634-b49f-b7bee4d19bbf
+
+	measure ComplaintsTop5States =
+			
+			VAR Top5Countries =
+			    FILTER(
+			        ALL(DimState[State]),
+			        RANKX(
+			            ALL(DimState[State]),
+			            CALCULATE(COUNTROWS(FactComplaintCount)),
+			            ,
+			            DESC,
+			            Dense
+			        ) <= 5
+			    )
+			RETURN
+			    CALCULATE(COUNTROWS(FactComplaintCount), Top5Countries)
+		formatString: 0
+		lineageTag: a6c69a0e-22e4-4631-a5fb-842c25ce8c00
+
+	column 'Complaint ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: ec32f253-b4f0-4564-85e3-aaf8fd37ea61
+		summarizeBy: count
+		sourceColumn: Complaint ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column answerID
+		dataType: int64
+		formatString: 0
+		lineageTag: c68f1dca-779b-4fee-b397-6049ec3ee7b1
+		summarizeBy: none
+		sourceColumn: answerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column issueID
+		dataType: int64
+		formatString: 0
+		lineageTag: e9335ae9-9c23-4708-a0a8-9fc9f29fdf28
+		summarizeBy: none
+		sourceColumn: issueID
+
+		annotation SummarizationSetBy = Automatic
+
+	column productID
+		dataType: int64
+		formatString: 0
+		lineageTag: a1d95042-3593-41fa-bd30-58398ded9eef
+		summarizeBy: none
+		sourceColumn: productID
+
+		annotation SummarizationSetBy = Automatic
+
+	column stateID
+		dataType: int64
+		formatString: 0
+		lineageTag: 9d48f907-240e-44ef-a7fa-391f9560c634
+		summarizeBy: none
+		sourceColumn: stateID
+
+		annotation SummarizationSetBy = Automatic
+
+	column submitID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2527877f-4c0a-482c-9d6a-702b69152a95
+		summarizeBy: none
+		sourceColumn: submitID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1964b3f9-b1b4-4ecb-8c28-b4f268d7e224
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition FactComplaintCount = m
+		mode: import
+		source =
+				let
+				    Source = Data,
+				    #"Merged Queries" = Table.NestedJoin(Source, {"Date received"}, DimDateReceived, {"Date received"}, "DimDateReceived", JoinKind.LeftOuter),
+				    #"Expanded DimDateReceived" = Table.ExpandTableColumn(#"Merged Queries", "DimDateReceived", {"DRIndex"}, {"DRIndex"}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Expanded DimDateReceived", {"Date submitted"}, DimDateSubmitted, {"Date submitted"}, "DimDateSubmitted", JoinKind.LeftOuter),
+				    #"Expanded DimDateSubmitted" = Table.ExpandTableColumn(#"Merged Queries1", "DimDateSubmitted", {"DSIndex"}, {"DSIndex"}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Expanded DimDateSubmitted", {"Issue", "Sub-issue"}, DimIssueDetail, {"Issue", "Sub-issue"}, "DimIssueDetail", JoinKind.LeftOuter),
+				    #"Expanded DimIssueDetail" = Table.ExpandTableColumn(#"Merged Queries2", "DimIssueDetail", {"issueID"}, {"issueID"}),
+				    #"Merged Queries3" = Table.NestedJoin(#"Expanded DimIssueDetail", {"Product", "Sub-product"}, DimProductDetail, {"Product", "Sub-product"}, "DimProductDetail", JoinKind.LeftOuter),
+				    #"Expanded DimProductDetail" = Table.ExpandTableColumn(#"Merged Queries3", "DimProductDetail", {"productID"}, {"productID"}),
+				    #"Merged Queries4" = Table.NestedJoin(#"Expanded DimProductDetail", {"State"}, DimState, {"State"}, "DimState", JoinKind.LeftOuter),
+				    #"Expanded DimState" = Table.ExpandTableColumn(#"Merged Queries4", "DimState", {"stateIndex"}, {"stateIndex"}),
+				    #"Merged Queries5" = Table.NestedJoin(#"Expanded DimState", {"Submitted via"}, DimSubmit, {"Submitted via"}, "DimSubmit", JoinKind.LeftOuter),
+				    #"Expanded DimSubmit" = Table.ExpandTableColumn(#"Merged Queries5", "DimSubmit", {"submitIndex"}, {"submitIndex"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded DimSubmit",{"stateIndex", "submitIndex", "DRIndex", "DSIndex", "issueID", "productID"}),
+				    #"Merged Queries6" = Table.NestedJoin(#"Removed Columns", {"Company public response", "Company response to consumer", "Timely response?"}, DimAnswer, {"Company public response", "Company response to consumer", "Timely response?"}, "DimAnswer", JoinKind.LeftOuter),
+				    #"Expanded DimAnswer" = Table.ExpandTableColumn(#"Merged Queries6", "DimAnswer", {"answerID"}, {"answerID"}),
+				    #"Merged Queries7" = Table.NestedJoin(#"Expanded DimAnswer", {"Date received"}, DimDateReceived, {"Date received"}, "DimDateReceived", JoinKind.LeftOuter),
+				    #"Expanded DimDateReceived1" = Table.ExpandTableColumn(#"Merged Queries7", "DimDateReceived", {"DRID"}, {"DRID"}),
+				    #"Merged Queries8" = Table.NestedJoin(#"Expanded DimDateReceived1", {"Date submitted"}, DimDateSubmitted, {"Date submitted"}, "DimDateSubmitted", JoinKind.LeftOuter),
+				    #"Expanded DimDateSubmitted1" = Table.ExpandTableColumn(#"Merged Queries8", "DimDateSubmitted", {"DSID"}, {"DSID"}),
+				    #"Merged Queries9" = Table.NestedJoin(#"Expanded DimDateSubmitted1", {"Issue", "Sub-issue"}, DimIssueDetail, {"Issue", "Sub-issue"}, "DimIssueDetail", JoinKind.LeftOuter),
+				    #"Expanded DimIssueDetail1" = Table.ExpandTableColumn(#"Merged Queries9", "DimIssueDetail", {"issueID"}, {"issueID"}),
+				    #"Merged Queries10" = Table.NestedJoin(#"Expanded DimIssueDetail1", {"Product", "Sub-product"}, DimProductDetail, {"Product", "Sub-product"}, "DimProductDetail", JoinKind.LeftOuter),
+				    #"Expanded DimProductDetail1" = Table.ExpandTableColumn(#"Merged Queries10", "DimProductDetail", {"productID"}, {"productID"}),
+				    #"Merged Queries11" = Table.NestedJoin(#"Expanded DimProductDetail1", {"State"}, DimState, {"State"}, "DimState", JoinKind.LeftOuter),
+				    #"Expanded DimState1" = Table.ExpandTableColumn(#"Merged Queries11", "DimState", {"stateID"}, {"stateID"}),
+				    #"Merged Queries12" = Table.NestedJoin(#"Expanded DimState1", {"Submitted via"}, DimSubmit, {"Submitted via"}, "DimSubmit", JoinKind.LeftOuter),
+				    #"Expanded DimSubmit1" = Table.ExpandTableColumn(#"Merged Queries12", "DimSubmit", {"submitID"}, {"submitID"}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Expanded DimSubmit1",{"Submitted via", "Date submitted", "State", "Product", "Sub-product", "Issue", "Sub-issue", "Company public response", "Company response to consumer", "Timely response?"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns1",{{"Date received", "Date"}}),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Renamed Columns",{"DRID", "DSID"})
+				in
+				    #"Removed Columns2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

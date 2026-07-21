@@ -1,0 +1,120 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "45e91db4c470ebc31205",
+  "position": {
+    "x": 0,
+    "y": 360,
+    "z": 0,
+    "height": 360,
+    "width": 582.22222222222217,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimState"
+                    }
+                  },
+                  "Property": "State"
+                }
+              },
+              "queryRef": "DimState.State",
+              "nativeQueryRef": "State"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactComplaintCount"
+                    }
+                  },
+                  "Property": "TotalComplaints"
+                }
+              },
+              "queryRef": "FactComplaintCount.TotalComplaints",
+              "nativeQueryRef": "TotalComplaints"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactComplaintCount"
+                    }
+                  },
+                  "Property": "StateRankByComplaints"
+                }
+              },
+              "queryRef": "FactComplaintCount.StateRankByComplaints",
+              "nativeQueryRef": "StateRankByComplaints"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "FactComplaintCount"
+                  }
+                },
+                "Property": "StateRankByComplaints"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'growToFit'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "general": [
+        {
+          "properties": {
+            "keepLayerOrder": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

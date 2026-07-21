@@ -1,0 +1,86 @@
+expression Data =
+		let
+		    Source = Excel.Workbook(File.Contents("C:\Users\MartinRácz\Desktop\bigData_git\data\Consumer_Complaints.xlsx"), null, true),
+		    Data_Sheet = Source{[Item="Data",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(Data_Sheet, [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Complaint ID", Int64.Type}, {"Submitted via", type text}, {"Date submitted", type date}, {"Date received", type date}, {"State", type text}, {"Product", type text}, {"Sub-product", type text}, {"Issue", type text}, {"Sub-issue", type text}, {"Company public response", type text}, {"Company response to consumer", type text}, {"Timely response?", type text}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","Company has responded to the consumer and the CFPB and chooses not to provide a public response","Not public",Replacer.ReplaceText,{"Company public response"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Replaced Value", each true),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Filtered Rows","Company believes the complaint provided an opportunity to answer consumer's questions","Public",Replacer.ReplaceText,{"Company public response"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Closed with explanation","Explanation",Replacer.ReplaceText,{"Company response to consumer"}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Closed with monetary relief","Monetary relief",Replacer.ReplaceText,{"Company response to consumer"}),
+		    #"Filtered Rows1" = Table.SelectRows(#"Replaced Value3", each true),
+		    #"Replaced Value4" = Table.ReplaceValue(#"Filtered Rows1","Closed with non-monetary relief","Non-monetary relief",Replacer.ReplaceText,{"Company response to consumer"}),
+		    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4",null,"In Progress",Replacer.ReplaceValue,{"Company public response"}),
+		    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5",null,"In Progress",Replacer.ReplaceValue,{"Timely response?"}),
+		    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6",null,"Non-Categorized",Replacer.ReplaceValue,{"Sub-issue"}),
+		    #"Replaced Value8" = Table.ReplaceValue(#"Replaced Value7","Money transfer, virtual currency, or money service","Money Services",Replacer.ReplaceText,{"Product"}),
+		    #"Replaced Value9" = Table.ReplaceValue(#"Replaced Value8","Credit reporting, credit repair services, or other personal consumer reports","Consumer Reporting",Replacer.ReplaceText,{"Product"})
+		in
+		    #"Replaced Value9"
+	lineageTag: 6c9d3582-673d-41eb-9c71-b910efa5f65d
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression DimDateReceived =
+		let
+		    Source = Data,
+		    #"Removed Columns" = Table.RemoveColumns(Source,{"Complaint ID", "Submitted via", "Date submitted", "State", "Product", "Sub-product", "Issue", "Sub-issue", "Company public response", "Company response to consumer", "Timely response?"}),
+		    #"Duplicated Column" = Table.DuplicateColumn(#"Removed Columns", "Date received", "Date received - Copy"),
+		    #"Duplicated Column1" = Table.DuplicateColumn(#"Duplicated Column", "Date received - Copy", "Date received - Copy - Copy"),
+		    #"Duplicated Column2" = Table.DuplicateColumn(#"Duplicated Column1", "Date received - Copy - Copy", "Date received - Copy - Copy - Copy"),
+		    #"Duplicated Column3" = Table.DuplicateColumn(#"Duplicated Column2", "Date received - Copy - Copy - Copy", "Date received - Copy - Copy - Copy - Copy"),
+		    #"Duplicated Column4" = Table.DuplicateColumn(#"Duplicated Column3", "Date received - Copy - Copy - Copy - Copy", "Date received - Copy - Copy - Copy - Copy - Copy"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Duplicated Column4",{{"Date received - Copy", "DR_year"}, {"Date received - Copy - Copy", "DR_quater"}, {"Date received - Copy - Copy - Copy", "DR_month"}, {"Date received - Copy - Copy - Copy - Copy", "DR_day"}, {"Date received - Copy - Copy - Copy - Copy - Copy", "DR_day-name"}}),
+		    #"Extracted Year" = Table.TransformColumns(#"Renamed Columns",{{"DR_year", Date.Year, Int64.Type}}),
+		    #"Calculated Quarter" = Table.TransformColumns(#"Extracted Year",{{"DR_quater", Date.QuarterOfYear, Int64.Type}}),
+		    #"Extracted Month" = Table.TransformColumns(#"Calculated Quarter",{{"DR_month", Date.Month, Int64.Type}}),
+		    #"Extracted Day" = Table.TransformColumns(#"Extracted Month",{{"DR_day", Date.Day, Int64.Type}}),
+		    #"Extracted Day Name" = Table.TransformColumns(#"Extracted Day", {{"DR_day-name", each Date.DayOfWeekName(_), type text}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Extracted Day Name"),
+		    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 0, 1, Int64.Type),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Added Index",{"Index"}),
+		    #"Added Index1" = Table.AddIndexColumn(#"Removed Columns1", "Index", 1, 1, Int64.Type),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Added Index1",{{"Index", "DRID"}})
+		in
+		    #"Renamed Columns1"
+	lineageTag: 54ed2b94-0695-48e4-b44d-41fb111493fa
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression DimDateSubmitted =
+		let
+		    Source = Data,
+		    #"Removed Columns" = Table.RemoveColumns(Source,{"Complaint ID", "Submitted via", "Date received", "State", "Product", "Sub-product", "Issue", "Sub-issue", "Company public response", "Company response to consumer", "Timely response?"}),
+		    #"Duplicated Column" = Table.DuplicateColumn(#"Removed Columns", "Date submitted", "Date submitted - Copy"),
+		    #"Renamed Columns" = Table.RenameColumns(#"Duplicated Column",{{"Date submitted - Copy", "DS_year"}}),
+		    #"Extracted Year" = Table.TransformColumns(#"Renamed Columns",{{"DS_year", Date.Year, Int64.Type}}),
+		    #"Duplicated Column1" = Table.DuplicateColumn(#"Extracted Year", "Date submitted", "Date submitted - Copy"),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Duplicated Column1",{{"Date submitted - Copy", "DS_quater"}}),
+		    #"Duplicated Column2" = Table.DuplicateColumn(#"Renamed Columns1", "DS_quater", "DS_quater - Copy"),
+		    #"Renamed Columns2" = Table.RenameColumns(#"Duplicated Column2",{{"DS_quater - Copy", "DS_month"}}),
+		    #"Duplicated Column3" = Table.DuplicateColumn(#"Renamed Columns2", "DS_month", "DS_month - Copy"),
+		    #"Renamed Columns3" = Table.RenameColumns(#"Duplicated Column3",{{"DS_month - Copy", "DS_day"}}),
+		    #"Calculated Quarter" = Table.TransformColumns(#"Renamed Columns3",{{"DS_quater", Date.QuarterOfYear, Int64.Type}}),
+		    #"Extracted Month" = Table.TransformColumns(#"Calculated Quarter",{{"DS_month", Date.Month, Int64.Type}}),
+		    #"Extracted Day" = Table.TransformColumns(#"Extracted Month",{{"DS_day", Date.Day, Int64.Type}}),
+		    #"Duplicated Column4" = Table.DuplicateColumn(#"Extracted Day", "DS_day", "DS_day - Copy"),
+		    #"Removed Columns1" = Table.RemoveColumns(#"Duplicated Column4",{"DS_day - Copy"}),
+		    #"Duplicated Column5" = Table.DuplicateColumn(#"Removed Columns1", "Date submitted", "Date submitted - Copy"),
+		    #"Renamed Columns4" = Table.RenameColumns(#"Duplicated Column5",{{"Date submitted - Copy", "DS_day-name"}}),
+		    #"Extracted Day Name" = Table.TransformColumns(#"Renamed Columns4", {{"DS_day-name", each Date.DayOfWeekName(_), type text}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Extracted Day Name"),
+		    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 1, 1, Int64.Type),
+		    #"Renamed Columns5" = Table.RenameColumns(#"Added Index",{{"Index", "DSID"}})
+		in
+		    #"Renamed Columns5"
+	lineageTag: 5faa76ca-078e-4894-bb0b-73fac01d75d1
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

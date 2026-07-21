@@ -1,0 +1,44 @@
+table DimIssueDetail
+	lineageTag: 2eb5e84d-c7c8-48b6-8393-01038a7300ca
+
+	column Issue
+		dataType: string
+		lineageTag: 7e0654a4-dc10-4e87-89c7-9ee96e35419d
+		summarizeBy: none
+		sourceColumn: Issue
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sub-issue
+		dataType: string
+		lineageTag: b199091e-e0c8-4441-b1be-55378271b446
+		summarizeBy: none
+		sourceColumn: Sub-issue
+
+		annotation SummarizationSetBy = Automatic
+
+	column issueID
+		dataType: int64
+		formatString: 0
+		lineageTag: ab6d6d9b-8db6-4662-8fc1-788b0eda011c
+		summarizeBy: none
+		sourceColumn: issueID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimIssueDetail = m
+		mode: import
+		source =
+				let
+				    Source = Data,
+				    #"Removed Columns" = Table.RemoveColumns(Source,{"Complaint ID", "Submitted via", "Date submitted", "Date received", "State", "Product", "Sub-product", "Company public response", "Company response to consumer", "Timely response?"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Columns"),
+				    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 1, 1, Int64.Type),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Index",{{"Index", "issueID"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

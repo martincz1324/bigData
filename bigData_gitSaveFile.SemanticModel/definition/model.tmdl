@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: cs-CZ
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Data","FactComplaintCount","DimProductDetail","DimIssueDetail","DimDateSubmitted","DimDateReceived","DimSubmit","DimState","DimAnswer"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table FactComplaintCount
+ref table DimProductDetail
+ref table DimIssueDetail
+ref table DimSubmit
+ref table DimState
+ref table DimAnswer
+ref table DimDate
+
+ref cultureInfo en-US
+

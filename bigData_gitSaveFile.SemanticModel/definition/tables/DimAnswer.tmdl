@@ -1,0 +1,52 @@
+table DimAnswer
+	lineageTag: 4d8d427e-955f-4e28-bdaf-9691e4b161c9
+
+	column 'Company public response'
+		dataType: string
+		lineageTag: 8c484dc2-4167-45fa-928d-b41dc46aaf00
+		summarizeBy: none
+		sourceColumn: Company public response
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Company response to consumer'
+		dataType: string
+		lineageTag: d8c068fa-3d9c-42c3-b35a-fbc61ab2c7cf
+		summarizeBy: none
+		sourceColumn: Company response to consumer
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Timely response?'
+		dataType: string
+		lineageTag: 6263a2d8-0eab-4656-99c2-5967fb61c48f
+		summarizeBy: none
+		sourceColumn: Timely response?
+
+		annotation SummarizationSetBy = Automatic
+
+	column answerID
+		dataType: int64
+		formatString: 0
+		lineageTag: f40da188-3532-4f83-b7a7-d4667244e18b
+		summarizeBy: none
+		sourceColumn: answerID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimAnswer = m
+		mode: import
+		source =
+				let
+				    Source = Data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Company public response", "Company response to consumer", "Timely response?"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 1, 1, Int64.Type),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Index",{{"Index", "answerID"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
