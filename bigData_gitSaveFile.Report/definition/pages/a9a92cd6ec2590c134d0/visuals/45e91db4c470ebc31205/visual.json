@@ -3,10 +3,10 @@
   "name": "45e91db4c470ebc31205",
   "position": {
     "x": 0,
-    "y": 360,
+    "y": 360.17725258493351,
     "z": 0,
-    "height": 360,
-    "width": 582.22222222222217,
+    "height": 360.17725258493351,
+    "width": 726.97193500738547,
     "tabOrder": 0
   },
   "visual": {
@@ -56,6 +56,20 @@
               },
               "queryRef": "FactComplaintCount.StateRankByComplaints",
               "nativeQueryRef": "StateRankByComplaints"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactComplaintCount"
+                    }
+                  },
+                  "Property": "StateVsNationalAvg"
+                }
+              },
+              "queryRef": "FactComplaintCount.StateVsNationalAvg",
+              "nativeQueryRef": "StateVsNationalAvg"
             }
           ]
         }

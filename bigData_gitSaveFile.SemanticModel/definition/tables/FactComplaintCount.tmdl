@@ -154,6 +154,18 @@ table FactComplaintCount
 		formatString: 0
 		lineageTag: a6c69a0e-22e4-4631-a5fb-842c25ce8c00
 
+	measure StateVsNationalAvg =
+			
+			VAR CurrentState = COUNTROWS(FactComplaintCount)
+			VAR NationalAvg =
+			    AVERAGEX(
+			        ALL(DimState[State]),
+			        CALCULATE(COUNTROWS(FactComplaintCount))
+			    )
+			RETURN
+			    IF(CurrentState > NationalAvg, "Above Average", "Below Average")
+		lineageTag: d60e7f57-5872-4e54-a3cb-e3d078ec7002
+
 	column 'Complaint ID'
 		dataType: int64
 		formatString: 0

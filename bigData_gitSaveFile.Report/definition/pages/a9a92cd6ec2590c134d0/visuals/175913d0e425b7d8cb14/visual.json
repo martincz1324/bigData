@@ -32,8 +32,9 @@
                 }
               },
               "queryRef": "CountNonNull(FactComplaintCount.issueID)",
-              "nativeQueryRef": "Number of Issues",
-              "displayName": "Number of Issues"
+              "nativeQueryRef": "Count of issueID",
+              "displayName": "Number of Issues",
+              "format": "0"
             }
           ]
         }
@@ -81,6 +82,38 @@
           },
           "selector": {
             "id": "default"
+          }
+        }
+      ],
+      "smallMultiplesHeader": [
+        {
+          "properties": {
+            "displayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ],
+      "value": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CountNonNull(FactComplaintCount.issueID)"
           }
         }
       ]
