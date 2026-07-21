@@ -166,6 +166,61 @@ table FactComplaintCount
 			    IF(CurrentState > NationalAvg, "Above Average", "Below Average")
 		lineageTag: d60e7f57-5872-4e54-a3cb-e3d078ec7002
 
+	measure ProductRankByComplaints =
+			
+			
+			VAR CurrentValue =
+			    COUNTROWS(FactComplaintCount)
+			RETURN
+			
+			    RANKX(
+			        ALL(DimProductDetail[Product]),
+			        CALCULATE(
+			            COUNTROWS(FactComplaintCount)
+			        ),
+			        CurrentValue,
+			        DESC,
+			        Dense
+			    )
+		formatString: 0
+		lineageTag: e96978f5-2b85-4c3c-81a8-41d94ef1530c
+
+	measure ChannelRankByComplaints =
+			
+			
+			VAR CurrentValue =
+			    COUNTROWS(FactComplaintCount)
+			RETURN
+			
+			    RANKX(
+			        ALL(DimSubmit[Submitted via]),
+			        CALCULATE(
+			            COUNTROWS(FactComplaintCount)
+			        ),
+			        CurrentValue,
+			        DESC,
+			        Dense
+			    )
+		formatString: 0
+		lineageTag: 6d669689-9568-48fc-b59d-b6a924b8457f
+
+	measure ComplaintsQoQ% =
+			
+			
+			VAR CurrentQuarter = COUNTROWS(FactComplaintCount)
+			
+			VAR PrevQuarter =
+			    CALCULATE(
+			        COUNTROWS(FactComplaintCount),
+			        DATEADD(DimDate[Date], -1, QUARTER)
+			    )
+			
+			RETURN
+			    DIVIDE(CurrentQuarter - PrevQuarter, PrevQuarter, 0)
+		lineageTag: e0018879-60b3-45e0-94a4-19f6289dd567
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	column 'Complaint ID'
 		dataType: int64
 		formatString: 0
