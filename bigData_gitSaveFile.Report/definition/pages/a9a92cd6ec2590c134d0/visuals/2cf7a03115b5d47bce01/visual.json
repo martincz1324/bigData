@@ -50,13 +50,13 @@
         "sort": [
           {
             "field": {
-              "Measure": {
+              "Column": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "FactComplaintCount"
+                    "Entity": "DimProductDetail"
                   }
                 },
-                "Property": "ProductRankByComplaints"
+                "Property": "Product"
               }
             },
             "direction": "Ascending"
