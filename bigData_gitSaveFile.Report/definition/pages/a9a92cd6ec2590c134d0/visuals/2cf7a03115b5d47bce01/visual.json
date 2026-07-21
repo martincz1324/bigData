@@ -1,0 +1,84 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "2cf7a03115b5d47bce01",
+  "position": {
+    "x": 1032.3190546528804,
+    "y": 113.44165435745937,
+    "z": 5003,
+    "height": 246.73559822747413,
+    "width": 247.68094534711963,
+    "tabOrder": 4002
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimProductDetail"
+                    }
+                  },
+                  "Property": "Product"
+                }
+              },
+              "queryRef": "DimProductDetail.Product",
+              "nativeQueryRef": "Product"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactComplaintCount"
+                    }
+                  },
+                  "Property": "ProductRankByComplaints"
+                }
+              },
+              "queryRef": "FactComplaintCount.ProductRankByComplaints",
+              "nativeQueryRef": "ProductRankByComplaints"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "FactComplaintCount"
+                  }
+                },
+                "Property": "ProductRankByComplaints"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'fitToContent'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

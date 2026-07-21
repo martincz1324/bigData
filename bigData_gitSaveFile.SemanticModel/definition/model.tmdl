@@ -10,7 +10,7 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_QueryOrder = ["Data","FactComplaintCount","DimProductDetail","DimIssueDetail","DimDateSubmitted","DimDateReceived","DimSubmit","DimState","DimAnswer"]
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","TMDLView_Desktop"]
 
 ref table FactComplaintCount
 ref table DimProductDetail

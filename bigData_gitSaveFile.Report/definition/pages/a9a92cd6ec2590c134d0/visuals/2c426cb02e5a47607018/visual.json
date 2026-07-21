@@ -3,10 +3,10 @@
   "name": "2c426cb02e5a47607018",
   "position": {
     "x": 0,
-    "y": 118.88888888888889,
+    "y": 119.11373707533234,
     "z": 4000,
-    "height": 231.11111111111111,
-    "width": 572.22222222222217,
+    "height": 230.66469719350073,
+    "width": 363.95864106351547,
     "tabOrder": 3000
   },
   "visual": {
@@ -28,6 +28,24 @@
               },
               "queryRef": "DimState.State",
               "nativeQueryRef": "State"
+            }
+          ]
+        },
+        "Value": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactComplaintCount"
+                    }
+                  },
+                  "Property": "StateRankByComplaints"
+                }
+              },
+              "queryRef": "FactComplaintCount.StateRankByComplaints",
+              "nativeQueryRef": "StateRankByComplaints"
             }
           ]
         }
@@ -82,6 +100,43 @@
               "expr": {
                 "Literal": {
                   "Value": "'albersUsa'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fillRule": {
+              "linearGradient2": {
+                "min": {
+                  "color": {
+                    "expr": {
+                      "Literal": {
+                        "Value": "'minColor'"
+                      }
+                    }
+                  }
+                },
+                "max": {
+                  "color": {
+                    "expr": {
+                      "Literal": {
+                        "Value": "'#D64550'"
+                      }
+                    }
+                  }
+                },
+                "nullColoringStrategy": {
+                  "strategy": {
+                    "expr": {
+                      "Literal": {
+                        "Value": "'asZero'"
+                      }
+                    }
+                  }
                 }
               }
             }

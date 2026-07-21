@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "5d23ed9a253c50606630",
+  "position": {
+    "x": 733.58936484490391,
+    "y": 113.44165435745937,
+    "z": 5007,
+    "height": 246.73559822747413,
+    "width": 298.72968980797634,
+    "tabOrder": 4006
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimSubmit"
+                    }
+                  },
+                  "Property": "Submitted via"
+                }
+              },
+              "queryRef": "DimSubmit.Submitted via",
+              "nativeQueryRef": "Submitted via"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactComplaintCount"
+                    }
+                  },
+                  "Property": "ChannelRankByComplaints"
+                }
+              },
+              "queryRef": "FactComplaintCount.ChannelRankByComplaints",
+              "nativeQueryRef": "ChannelRankByComplaints"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "FactComplaintCount"
+                  }
+                },
+                "Property": "ChannelRankByComplaints"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'fitToContent'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "5a1c2fa41632427eaa85",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimSubmit"
+              }
+            },
+            "Property": "Submitted via"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}
